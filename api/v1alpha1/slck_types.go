@@ -60,6 +60,12 @@ type RedisConfig struct {
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 }
 
+type ResourceUsage struct {
+	//+optional
+	CPU string `json:"cpu,omitempty"`
+	//+optional
+	Mem string `json:"mem,omitempty"`
+} 
 
 // SlckSpec defines the desired state of Slck
 type SlckSpec struct {
@@ -131,7 +137,7 @@ type SlckSpec struct {
 	Affinity corev1.Affinity `json:"affinity,omitempty"`
 
 	// Redis configuration
-	// +operator-sdk:csv:customresourcedefinitions:type=specs
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	Redis RedisConfig `json:"redis"`
 }
 
@@ -143,11 +149,13 @@ type SlckStatus struct {
 	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
 
 	// Additional fields to enrich status data
+	// +operator-sdk:csv:customresourcedefinitions:type=status
 	Replicas int32 `json:"replicas,omitempty"`
-	ResourceUsage struct {
-		CPU string `json:"cpu,omitempty"`
-		Mem string `json:"mem,omitempty"`
-	} `json:"resourceUsage,omitempty"`
+
+	// +operator-sdk:csv:customresourcedefinitions:type=status
+	Resources ResourceUsage `json:"resources,omitempty"`
+
+	// +operator-sdk:csv:customresourcedefinitions:type=status
 	LastError string `json:"lastError,omitempty"`
 }
 
@@ -155,7 +163,6 @@ type SlckStatus struct {
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Age",type=date,JSONPath=.metadata.creationTimestamp
-// +genclient
 type Slck struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
