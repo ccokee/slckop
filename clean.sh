@@ -1,1 +1,2 @@
-operator-sdk cleanup memcached-operator
+kubectl delete -f config/samples/cache_v1alpha1_slck.yaml
+make undeploy
