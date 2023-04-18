@@ -19,11 +19,10 @@ package controllers
 import (
 	"context"
 	"fmt"
-	cachev1alpha1 "github.com/ccokee/slckop/api/v1alpha1"
+	cliv1alpha1 "github.com/ccokee/slckop/api/v1alpha1"
 	helm "helm.sh/helm/v3/pkg/action"
 	helmlibloader "helm.sh/helm/v3/pkg/chart/loader"
 	"helm.sh/helm/v3/pkg/cli"
-	"helm.sh/helm/v3/pkg/getter"
 	"k8s.io/apimachinery/pkg/api/errors"
 	"k8s.io/apimachinery/pkg/runtime"
 	"os"
@@ -55,7 +54,7 @@ func (r *SlckReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	log := log.FromContext(ctx)
 
 	// Lookup the Slck instance for this reconcile request
-	slck := &cachev1alpha1.Slck{}
+	slck := &cliv1alpha1.Slck{}
 	err := r.Get(ctx, req.NamespacedName, slck)
 	if err != nil {
 		if errors.IsNotFound(err) {
@@ -76,12 +75,16 @@ func (r *SlckReconciler) Reconcile(ctx context.Context, req ctrl.Request) (ctrl.
 	return ctrl.Result{}, nil
 }
 
-func (r *SlckReconciler) installHelmChart(slck *cachev1alpha1.Slck) error {
+func customDebugLog(format string, v ...interface{}) {
+	fmt.Printf(format+"\n", v...)
+}
+
+func (r *SlckReconciler) installHelmChart(slck *cliv1alpha1.Slck) error {
 	actionConfig := new(helm.Configuration)
 	settings := cli.New()
 
 	// Initialize the Helm action configuration
-	err := actionConfig.Init(settings.RESTClientGetter(), slck.Namespace, os.Getenv("HELM_DRIVER"), log.Log)
+	err := actionConfig.Init(settings.RESTClientGetter(), slck.Namespace, os.Getenv("HELM_DRIVER"), customDebugLog)
 	if err != nil {
 		return fmt.Errorf("failed to initialize Helm action configuration: %w", err)
 	}
@@ -100,10 +103,10 @@ func (r *SlckReconciler) installHelmChart(slck *cachev1alpha1.Slck) error {
 		return fmt.Errorf("failed to load Helm chart: %w", err)
 	}
 
-	providers := getter.All(settings)
-	values, err := installClient.MergeValues(providers, slck.Spec.Values)
-	if err != nil {
-		return fmt.Errorf("failed to merge Helm values: %w", err)
+	// Convert map[string]string to map[string]interface{}
+	values := make(map[string]interface{}, len(slck.Spec.Values))
+	for k, v := range slck.Spec.Values {
+		values[k] = v
 	}
 
 	_, err = installClient.Run(chart, values)
