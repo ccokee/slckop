@@ -1,5 +1,7 @@
 package controllers
 
+go 1.17
+
 import (
 	"context"
 	"fmt"
