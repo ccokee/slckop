@@ -17,53 +17,145 @@ limitations under the License.
 package v1alpha1
 
 import (
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+    corev1 "k8s.io/api/core/v1"
+    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
+
+
+type AutoscalingConfig struct {
+	// +optional
+	Enabled                     bool  `json:"enabled,omitempty"`
+	// +optional
+	MinReplicas                 int32 `json:"minReplicas,omitempty"`
+	// +optional
+	MaxReplicas                 int32 `json:"maxReplicas,omitempty"`
+	// +optional
+	TargetCPUUtilizationPercentage int32 `json:"targetCPUUtilizationPercentage,omitempty"`
+}
+
+type ImageConfig struct {
+	// +optional
+	Repository  string `json:"repository,omitempty"`
+	// +optional
+	PullPolicy  string `json:"pullPolicy,omitempty"`
+	Tag         string `json:"tag,omitempty"`
+}
+
+type ServiceConfig struct {
+	// +optional
+	Type string `json:"type,omitempty"`
+	// +optional
+	Port int32  `json:"port,omitempty"`
+}
+
+type RedisConfig struct {
+	// +optional
+	Replicas  int32 `json:"replicas,omitempty"`
+	// +optional
+	Service   ServiceConfig `json:"service,omitempty"`
+	// +optional
+	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
+}
+
 
 // SlckSpec defines the desired state of Slck
 type SlckSpec struct {
 	// INSERT ADDITIONAL SPEC FIELDS - desired state of cluster
 	// Important: Run "make" to regenerate code after modifying this file
 
-	// The following markers will use OpenAPI v3 schema to validate the value
-	// More info: https://book.kubebuilder.io/reference/markers/crd-validation.html
-	// +kubebuilder:validation:Minimum=1
-	// +kubebuilder:validation:Maximum=5
-	// +kubebuilder:validation:ExclusiveMaximum=false
-
-	// Size defines the number of Slck instances
+	// Helm chart related configurations
+	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
-	Size int32 `json:"size,omitempty"`
-
-	// Port defines the port that will be used to init the container with the image
+	ChartRepo     string            `json:"chartRepo,omitempty"`
+	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
-	ContainerPort int32 `json:"containerPort,omitempty"`
+	ChartName     string            `json:"chartName,omitempty"`
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	ChartVersion  string            `json:"chartVersion,omitempty"`
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Namespace     string            `json:"namespace,omitempty"`
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Values        map[string]string `json:"values,omitempty"`
+
+	// Autoscaling configuration
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Autoscaling AutoscalingConfig `json:"autoscaling"`
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	// Image configuration
+	Image ImageConfig `json:"image"`
+
+	// ImagePullSecrets configuration
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	ImagePullSecrets []corev1.LocalObjectReference `json:"imagePullSecrets,omitempty"`
+
+	// Number of replicas
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Replicas int32 `json:"replicas"`
+
+	// Resource requests and limits
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Resources corev1.ResourceRequirements `json:"resources"`
+
+	// NameOverride and FullnameOverride configurations
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	NameOverride     string `json:"nameOverride,omitempty"`
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	FullnameOverride string `json:"fullnameOverride,omitempty"`
+
+	// Service configuration
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Service ServiceConfig `json:"service"`
+
+	// NodeSelector configuration
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	NodeSelector map[string]string `json:"nodeSelector,omitempty"`
+
+	// Tolerations configuration
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Tolerations []corev1.Toleration `json:"tolerations,omitempty"`
+
+	// Affinity configuration
+	// +optional
+	// +operator-sdk:csv:customresourcedefinitions:type=spec
+	Affinity corev1.Affinity `json:"affinity,omitempty"`
+
+	// Redis configuration
+	// +operator-sdk:csv:customresourcedefinitions:type=specs
+	Redis RedisConfig `json:"redis"`
 }
+
 
 // SlckStatus defines the observed state of Slck
 type SlckStatus struct {
-	// Represents the observations of a Slck's current state.
-	// Slck.status.conditions.type are: "Available", "Progressing", and "Degraded"
-	// Slck.status.conditions.status are one of True, False, Unknown.
-	// Slck.status.conditions.reason the value should be a CamelCase string and producers of specific
-	// condition types may define expected values and meanings for this field, and whether the values
-	// are considered a guaranteed API.
-	// Slck.status.conditions.Message is a human readable message indicating details about the transition.
-	// For further information see: https://github.com/kubernetes/community/blob/master/contributors/devel/sig-architecture/api-conventions.md#typical-status-properties
-
-	// Conditions store the status conditions of the Slck instances
+	// Existing Conditions field
 	// +operator-sdk:csv:customresourcedefinitions:type=status
-	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type" protobuf:"bytes,1,rep,name=conditions"`
+	Conditions []metav1.Condition `json:"conditions,omitempty" patchStrategy:"merge" patchMergeKey:"type"`
+
+	// Additional fields to enrich status data
+	Replicas int32 `json:"replicas,omitempty"`
+	ResourceUsage struct {
+		CPU string `json:"cpu,omitempty"`
+		Mem string `json:"mem,omitempty"`
+	} `json:"resourceUsage,omitempty"`
+	LastError string `json:"lastError,omitempty"`
 }
 
-//+kubebuilder:object:root=true
-//+kubebuilder:subresource:status
 
-// Slck is the Schema for the slcks API
+// +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
+// +kubebuilder:printcolumn:name="Age",type=date,JSONPath=.metadata.creationTimestamp
+// +genclient
 type Slck struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -75,11 +167,13 @@ type Slck struct {
 //+kubebuilder:object:root=true
 
 // SlckList contains a list of Slck
+// SlckList contains a list of Slck
 type SlckList struct {
-	metav1.TypeMeta `json:",inline"`
-	metav1.ListMeta `json:"metadata,omitempty"`
-	Items           []Slck `json:"items"`
+    metav1.TypeMeta `json:",inline"`
+    metav1.ListMeta `json:"metadata,omitempty"`
+    Items           []Slck `json:"items"`
 }
+
 
 func init() {
 	SchemeBuilder.Register(&Slck{}, &SlckList{})

@@ -9,9 +9,4 @@ metadata:
     app.kubernetes.io/created-by: slckop
   name: slck-sample
 spec:
-  chartRepo:
-  chartName:
-  chartVersion:
-  values:
-    replicas:
-    
+  # TODO(user): Add fields here
