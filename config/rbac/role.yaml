@@ -6,7 +6,7 @@ metadata:
   name: manager-role
 rules:
 - apiGroups:
-  - cache.redrvm.cloud
+  - cli.redrvm.cloud
   resources:
   - slcks
   verbs:
@@ -18,13 +18,13 @@ rules:
   - update
   - watch
 - apiGroups:
-  - cache.redrvm.cloud
+  - cli.redrvm.cloud
   resources:
   - slcks/finalizers
   verbs:
   - update
 - apiGroups:
-  - cache.redrvm.cloud
+  - cli.redrvm.cloud
   resources:
   - slcks/status
   verbs:

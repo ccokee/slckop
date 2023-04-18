@@ -157,9 +157,10 @@ type SlckStatus struct {
 	LastError string `json:"lastError,omitempty"`
 }
 
-// +kubebuilder:object:root=true
-// +kubebuilder:subresource:status
-// +kubebuilder:printcolumn:name="Age",type=date,JSONPath=.metadata.creationTimestamp
+//+kubebuilder:object:root=true
+//+kubebuilder:subresource:status
+
+// Slck is the Schema for the slcks API
 type Slck struct {
 	metav1.TypeMeta   `json:",inline"`
 	metav1.ObjectMeta `json:"metadata,omitempty"`
@@ -170,7 +171,6 @@ type Slck struct {
 
 //+kubebuilder:object:root=true
 
-// SlckList contains a list of Slck
 // SlckList contains a list of Slck
 type SlckList struct {
 	metav1.TypeMeta `json:",inline"`

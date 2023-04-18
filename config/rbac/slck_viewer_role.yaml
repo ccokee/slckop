@@ -6,13 +6,13 @@ metadata:
     app.kubernetes.io/name: clusterrole
     app.kubernetes.io/instance: slck-viewer-role
     app.kubernetes.io/component: rbac
-    app.kubernetes.io/created-by: slckop
-    app.kubernetes.io/part-of: slckop
+    app.kubernetes.io/created-by: slck-operator
+    app.kubernetes.io/part-of: slck-operator
     app.kubernetes.io/managed-by: kustomize
   name: slck-viewer-role
 rules:
 - apiGroups:
-  - cache.redrvm.cloud
+  - cli.redrvm.cloud
   resources:
   - slcks
   verbs:
@@ -20,7 +20,7 @@ rules:
   - list
   - watch
 - apiGroups:
-  - cache.redrvm.cloud
+  - cli.redrvm.cloud
   resources:
   - slcks/status
   verbs:

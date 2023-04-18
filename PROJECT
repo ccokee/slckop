@@ -8,16 +8,16 @@ layout:
 plugins:
   manifests.sdk.operatorframework.io/v2: {}
   scorecard.sdk.operatorframework.io/v2: {}
-projectName: slckop
-repo: github.com/ccokee/slck-operator
+projectName: slck-operator
+repo: github.com/ccokee/slckop
 resources:
 - api:
     crdVersion: v1
     namespaced: true
   controller: true
   domain: redrvm.cloud
-  group: cache
+  group: cli
   kind: Slck
-  path: github.com/ccokee/slck-operator/api/v1alpha1
+  path: github.com/ccokee/slckop/api/v1alpha1
   version: v1alpha1
 version: "3"
