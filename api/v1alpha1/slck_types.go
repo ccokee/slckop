@@ -17,45 +17,44 @@ limitations under the License.
 package v1alpha1
 
 import (
-    corev1 "k8s.io/api/core/v1"
-    metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
+	corev1 "k8s.io/api/core/v1"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
 // EDIT THIS FILE!  THIS IS SCAFFOLDING FOR YOU TO OWN!
 // NOTE: json tags are required.  Any new fields you add must have json tags for the fields to be serialized.
 
-
 type AutoscalingConfig struct {
 	// +optional
-	Enabled                     bool  `json:"enabled,omitempty"`
+	Enabled bool `json:"enabled,omitempty"`
 	// +optional
-	MinReplicas                 int32 `json:"minReplicas,omitempty"`
+	MinReplicas int32 `json:"minReplicas,omitempty"`
 	// +optional
-	MaxReplicas                 int32 `json:"maxReplicas,omitempty"`
+	MaxReplicas int32 `json:"maxReplicas,omitempty"`
 	// +optional
 	TargetCPUUtilizationPercentage int32 `json:"targetCPUUtilizationPercentage,omitempty"`
 }
 
 type ImageConfig struct {
 	// +optional
-	Repository  string `json:"repository,omitempty"`
+	Repository string `json:"repository,omitempty"`
 	// +optional
-	PullPolicy  string `json:"pullPolicy,omitempty"`
-	Tag         string `json:"tag,omitempty"`
+	PullPolicy string `json:"pullPolicy,omitempty"`
+	Tag        string `json:"tag,omitempty"`
 }
 
 type ServiceConfig struct {
 	// +optional
 	Type string `json:"type,omitempty"`
 	// +optional
-	Port int32  `json:"port,omitempty"`
+	Port int32 `json:"port,omitempty"`
 }
 
 type RedisConfig struct {
 	// +optional
-	Replicas  int32 `json:"replicas,omitempty"`
+	Replicas int32 `json:"replicas,omitempty"`
 	// +optional
-	Service   ServiceConfig `json:"service,omitempty"`
+	Service ServiceConfig `json:"service,omitempty"`
 	// +optional
 	Resources corev1.ResourceRequirements `json:"resources,omitempty"`
 }
@@ -65,7 +64,7 @@ type ResourceUsage struct {
 	CPU string `json:"cpu,omitempty"`
 	//+optional
 	Mem string `json:"mem,omitempty"`
-} 
+}
 
 // SlckSpec defines the desired state of Slck
 type SlckSpec struct {
@@ -75,19 +74,19 @@ type SlckSpec struct {
 	// Helm chart related configurations
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
-	ChartRepo     string            `json:"chartRepo,omitempty"`
+	ChartRepo string `json:"chartRepo,omitempty"`
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
-	ChartName     string            `json:"chartName,omitempty"`
+	ChartName string `json:"chartName,omitempty"`
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
-	ChartVersion  string            `json:"chartVersion,omitempty"`
+	ChartVersion string `json:"chartVersion,omitempty"`
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
-	Namespace     string            `json:"namespace,omitempty"`
+	Namespace string `json:"namespace,omitempty"`
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
-	Values        map[string]string `json:"values,omitempty"`
+	Values map[string]string `json:"values,omitempty"`
 
 	// Autoscaling configuration
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
@@ -112,7 +111,7 @@ type SlckSpec struct {
 	// NameOverride and FullnameOverride configurations
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
-	NameOverride     string `json:"nameOverride,omitempty"`
+	NameOverride string `json:"nameOverride,omitempty"`
 	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	FullnameOverride string `json:"fullnameOverride,omitempty"`
@@ -141,7 +140,6 @@ type SlckSpec struct {
 	Redis RedisConfig `json:"redis"`
 }
 
-
 // SlckStatus defines the observed state of Slck
 type SlckStatus struct {
 	// Existing Conditions field
@@ -159,7 +157,6 @@ type SlckStatus struct {
 	LastError string `json:"lastError,omitempty"`
 }
 
-
 // +kubebuilder:object:root=true
 // +kubebuilder:subresource:status
 // +kubebuilder:printcolumn:name="Age",type=date,JSONPath=.metadata.creationTimestamp
@@ -176,11 +173,10 @@ type Slck struct {
 // SlckList contains a list of Slck
 // SlckList contains a list of Slck
 type SlckList struct {
-    metav1.TypeMeta `json:",inline"`
-    metav1.ListMeta `json:"metadata,omitempty"`
-    Items           []Slck `json:"items"`
+	metav1.TypeMeta `json:",inline"`
+	metav1.ListMeta `json:"metadata,omitempty"`
+	Items           []Slck `json:"items"`
 }
-
 
 func init() {
 	SchemeBuilder.Register(&Slck{}, &SlckList{})
