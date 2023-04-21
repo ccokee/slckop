@@ -28,7 +28,7 @@ twitter_username: 1w337
 github_username:  ccokee
 
 # Build settings
-remote_theme: benbalter/retlab
+theme: jekyll-theme-minimal
 plugins:
   - jekyll-feed
 
