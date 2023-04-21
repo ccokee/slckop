@@ -1,4 +1,4 @@
-apiVersion: cache.redrvm.cloud/v1alpha1
+apiVersion: cli.redrvm.cloud/v1alpha1
 kind: Slck
 metadata:
   labels:
