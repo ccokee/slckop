@@ -1,0 +1,14 @@
+apiVersion: v1
+entries:
+  slckop-chart:
+  - apiVersion: v2
+    appVersion: 1.16.0
+    created: "2023-04-21T12:10:08.387416717+02:00"
+    description: A Helm chart for Kubernetes
+    digest: e5bcc8b414d940e2373e14d586c7b6e1198602cad24a64e5daeae90d5a1e115b
+    name: slckop-chart
+    type: application
+    urls:
+    - slckop-chart-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-04-21T12:10:08.386970357+02:00"
