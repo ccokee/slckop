@@ -72,13 +72,10 @@ type SlckSpec struct {
 	// Important: Run "make" to regenerate code after modifying this file
 
 	// Helm chart related configurations
-	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	ChartRepo string `json:"chartRepo,omitempty"`
-	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	ChartName string `json:"chartName,omitempty"`
-	// +optional
 	// +operator-sdk:csv:customresourcedefinitions:type=spec
 	ChartVersion string `json:"chartVersion,omitempty"`
 	// +optional
